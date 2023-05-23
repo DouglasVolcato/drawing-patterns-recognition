@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
+    <title>Data Viewer</title>
+  </head>
+  <body>
+    <h1>Data Viewer</h1>
+    <div id="chartContainer"></div>
+    <div id="container"></div>
+    <script src="../common/js_objects/features.js"></script>
+    <script src="../common/constants.js"></script>
+    <script src="../common/utils.js"></script>
+    <script src="js/display.js"></script>
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
+
+    <script>
+      const { samples, featureNames } = features;
+      const groups = utils.groupBy(samples, "session_id");
+
+      for (let session_id in groups) {
+        const samples = groups[session_id];
+        const studentName = samples[0].student_name;
+
+        createRow(container, studentName, samples);
+      }
+
+      const options = {
+        width: 400,
+        height: 400,
+        hAxis: { title: featureNames[0] },
+        vAxis: { title: featureNames[1] },
+        legend: { position: "none" },
+        explorer: {
+          maxZoomIn: 0.01,
+          actions: ["dragToZoom", "rightClickToReset"],
+        },
+      };
+
+      google.charts.load("current", { packages: ["corechart", "scatter"] });
+
+      google.charts.setOnLoadCallback(() => {
+        const data = new google.visualization.DataTable();
+        data.addColumn("number", featureNames[0]);
+        data.addColumn("number", featureNames[1]);
+        data.addColumn({ type: "string", role: "style" });
+
+        data.addRows(
+          samples.map((s) => [
+            ...s.point,
+            `color: ${utils.styles[s.label].color}`,
+          ])
+        );
+
+        const chart = new google.visualization.ScatterChart(chartContainer);
+
+        google.visualization.events.addListener(chart, "select", selectHandler);
+
+        chart.draw(data, options);
+
+        function selectHandler() {
+          const selectedItem = chart.getSelection()[0];
+          if (selectedItem) {
+            const rowIndex = selectedItem.row;
+            const selectedSample = samples[rowIndex];
+            handleClick(selectedSample);
+          }
+        }
+      });
+
+      function handleClick(sample, doScroll = true) {
+        [...document.querySelectorAll(".emphasize")].forEach((e) =>
+          e.classList.remove("emphasize")
+        );
+
+        const el = document.getElementById("sample_" + sample.id);
+        el.classList.add("emphasize");
+
+        if (doScroll) {
+          el.scrollIntoView({ behavior: "auto", block: "center" });
+        }
+      }
+    </script>
+  </body>
+</html>
