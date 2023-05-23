@@ -18248,5 +18248,3 @@ const samples = [
   },
   { id: 3968, label: "clock", student_name: "MiMs", session_id: 1670331453322 },
 ];
-
-module.exports = samples;
