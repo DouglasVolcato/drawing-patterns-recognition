@@ -45,7 +45,7 @@ fileNames.forEach((fileName) => {
 fs.writeFileSync(constants.SAMPLES, JSON.stringify(samples));
 
 fs.writeFileSync(
-  constants.SAMPLES_JS,
+  "../common/js_objects/samples.js",
   "const samples =" + JSON.stringify(samples) + ";"
 );
 
