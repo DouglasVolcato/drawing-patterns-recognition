@@ -107,7 +107,14 @@
         const point = functions.map((f) => f(paths));
         const nearestItenName = utils.getNearest(point[0], point[1], samples);
 
-        predictedLabelContainer.innerHTML = "Is it a " + nearestItenName + "?";
+        if (nearestItenName) {
+          predictedLabelContainer.innerHTML =
+            "Is it a " + nearestItenName + "?";
+        } else {
+          predictedLabelContainer.innerHTML = "Not identified";
+        }
+
+        return;
       }
     </script>
   </body>

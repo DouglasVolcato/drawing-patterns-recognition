@@ -41,7 +41,7 @@ utils.findLongestArrayObject = (obj) => {
     }
   }
 
-  return longestArrayProp;
+  return longestArrayLength > 3 ? longestArrayProp : null;
 };
 
 utils.getNearest = (width, height, samples) => {
@@ -58,7 +58,7 @@ utils.getNearest = (width, height, samples) => {
   });
 
   distances.sort((a, b) => a.distance - b.distance);
-  const closestItens = distances.slice(0, 7).map((item) => item.sample);
+  const closestItens = distances.slice(0, 10).map((item) => item.sample);
   return utils.findLongestArrayObject(utils.groupBy(closestItens, "label"));
 };
 
