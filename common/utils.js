@@ -26,6 +26,42 @@ utils.groupBy = (objArray, key) => {
   return groups;
 };
 
+utils.findLongestArrayObject = (obj) => {
+  let longestArrayProp = null;
+  let longestArrayLength = 0;
+
+  for (let prop in obj) {
+    if (obj.hasOwnProperty(prop) && Array.isArray(obj[prop])) {
+      const currentArrayLength = obj[prop].length;
+
+      if (currentArrayLength > longestArrayLength) {
+        longestArrayLength = currentArrayLength;
+        longestArrayProp = prop;
+      }
+    }
+  }
+
+  return longestArrayProp;
+};
+
+utils.getNearest = (width, height, samples) => {
+  function calculateDistance(point1, point2) {
+    const dx = point2[0] - point1[0];
+    const dy = point2[1] - point1[1];
+    return Math.sqrt(dx * dx + dy * dy);
+  }
+
+  const distances = samples.map((sample) => {
+    const point = sample.point;
+    const distance = calculateDistance(point, [width, height]);
+    return { sample, distance };
+  });
+
+  distances.sort((a, b) => a.distance - b.distance);
+  const closestItens = distances.slice(0, 7).map((item) => item.sample);
+  return utils.findLongestArrayObject(utils.groupBy(closestItens, "label"));
+};
+
 utils.styles = {
   car: { color: "gray", emoji: "🚗" },
   fish: { color: "red", emoji: "🐠" },

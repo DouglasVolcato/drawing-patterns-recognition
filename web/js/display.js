@@ -40,3 +40,11 @@ function handleClick(sample, doScroll = true) {
     el.scrollIntoView({ behavior: "auto", block: "center" });
   }
 }
+
+function toggleInput() {
+  if (inputContainerBackground.style.display == "none") {
+    inputContainerBackground.style.display = "block";
+  } else {
+    inputContainerBackground.style.display = "none";
+  }
+}
